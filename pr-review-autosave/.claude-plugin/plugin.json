@@ -1,7 +1,7 @@
 {
   "name": "pr-review-autosave",
   "description": "PR review that automatically saves results to markdown files",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "author": {
     "name": "Clint Shryock"
   }
