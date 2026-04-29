@@ -1,8 +1,10 @@
 {
   "name": "pr-review-autosave",
   "description": "PR review that automatically saves results to markdown files",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "author": {
     "name": "Clint Shryock"
-  }
+  },
+  "homepage": "https://github.com/catsby/claude-plugins/tree/main/pr-review-autosave",
+  "repository": "https://github.com/catsby/claude-plugins"
 }

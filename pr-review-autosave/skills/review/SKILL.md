@@ -41,8 +41,8 @@ Look for existing review files to determine if this is a versioned re-review:
 - For WIP reviews: look for files matching `review_{SHORT_HASH}*.md`
 - If previous reviews exist:
   - Read the **latest** review file (highest version number, or the unversioned file if only one exists)
-  - Extract all issues with their statuses (open, fixed, dismissed)
-  - Note any **dismissed** issues — these must NOT be re-raised in the new review
+  - Extract all issues with their statuses (OPEN, FIXED, DISMISSED)
+  - Note any **DISMISSED** issues — these must NOT be re-raised in the new review
   - Determine the new version number (previous max version + 1)
   - Record the previous review's date for the header
 
@@ -63,28 +63,51 @@ Replace each bullet point's prefix with its `[#N]` index. This numbering is mand
 
 ## 5. Add per-issue metadata
 
-Each issue MUST include version and status metadata on the line immediately after the issue title:
+Each issue MUST follow this structured format:
 
 ```markdown
-[#1] **Some issue title** — `file.ts:42`
-*Introduced: v1 | Status: open*
+[#1] **Some issue title**
+
+**Introduced:** v1  
+**Status:** OPEN  
+**Files:**
+  - `file.ts:42`
+  - `other.ts:128`
+
+**Details:**
+
+Body of the finding — explanation of the bug, evidence, references to sibling code, etc.
+
+**Fix:** optional remediation guidance.
+
+```js
+// optional code block illustrating the fix
+```
 ```
 
-Rules:
-- For first-time reviews (v1): all issues are `Introduced: v1 | Status: open`
+Formatting rules:
+- The title line stands alone (no inline file path, no inline metadata).
+- Each metadata field (`Introduced:`, `Status:`, `Files:`) is on its own line. Lines that have a sibling field directly below them MUST end with two trailing spaces — this is the markdown line-break syntax that prevents adjacent fields from collapsing onto a single rendered line. (`Files:` itself does not need trailing spaces because the bulleted list that follows already forces a break.)
+- `Files:` is always a bulleted list, even when there is only one file. This keeps single-file and multi-file issues visually consistent and makes adding files trivial.
+- `Status:` values are UPPERCASE: `OPEN`, `DISMISSED`, `FIXED`.
+- `**Details:**` introduces the body of the finding; leave a blank line after it before the prose.
+- `**Fix:**` is optional — include it when there is concrete remediation guidance, otherwise omit.
+
+Status rules:
+- For first-time reviews (v1): all issues are `Introduced: v1` with `Status: OPEN`.
 - For re-reviews (v2+):
-  - Issues carried forward from a previous version keep their original `Introduced: vN`
-  - New issues found in this review get `Introduced: v{current}`
-  - All active issues have `Status: open`
-  - **Dismissed** issues from the previous review: carry forward with `Status: dismissed` but do NOT include them in the main findings sections. Instead, list them in a brief "Dismissed" subsection at the end (after Recommended Action) so they are preserved but not re-raised.
+  - Issues carried forward from a previous version keep their original `Introduced: vN`.
+  - New issues found in this review get `Introduced: v{current}`.
+  - All active issues have `Status: OPEN`.
+  - **Dismissed** issues from the previous review: carry forward with `Status: DISMISSED` but do NOT include them in the main findings sections. Instead, list them in a brief "Dismissed" subsection at the end (after Recommended Action) so they are preserved but not re-raised.
 
 ## 6. Compare with previous review (v2+ only)
 
 If this is a re-review, compare the current findings against the previous review:
-- Issues from the previous review that are no longer found: mark as **fixed**
-- Issues from the previous review that are still present: carry forward as **open** with their original `Introduced` version
-- **Dismissed** issues: carry forward silently (do not re-evaluate)
-- New issues not in the previous review: mark as **open** with the current version
+- Issues from the previous review that are no longer found: mark as **FIXED**
+- Issues from the previous review that are still present: carry forward as **OPEN** with their original `Introduced` version
+- **DISMISSED** issues: carry forward silently (do not re-evaluate)
+- New issues not in the previous review: mark as **OPEN** with the current version
 
 ## 7. Format the header
 
@@ -93,9 +116,9 @@ If this is a re-review, compare the current findings against the previous review
 ```markdown
 # PR#123 - PR title here
 
-**Branch:** `branch-name`
-**Commit:** `abc1234`
-**Reviewed:** YYYY-MM-DD
+**Branch:** `branch-name`  
+**Commit:** `abc1234`  
+**Reviewed:** YYYY-MM-DD  
 **Files changed:** N (X insertions, Y deletions)
 
 ## Description
@@ -106,15 +129,17 @@ Brief summary of what the changes actually do.
 ---
 ```
 
+Note: each metadata line above ends with two trailing spaces — this is required markdown syntax to force a line break so each field renders on its own line. Without the trailing spaces, the fields collapse onto a single line in the rendered output.
+
 If this is a versioned re-review (v2+), add the review version line:
 
 ```markdown
 # PR#123 - PR title here
 
-**Branch:** `branch-name`
-**Commit:** `abc1234`
-**Reviewed:** YYYY-MM-DD
-**Review version:** v2 (previous: v1 on YYYY-MM-DD)
+**Branch:** `branch-name`  
+**Commit:** `abc1234`  
+**Reviewed:** YYYY-MM-DD  
+**Review version:** v2 (previous: v1 on YYYY-MM-DD)  
 **Files changed:** N (X insertions, Y deletions)
 
 ## Description
@@ -130,9 +155,9 @@ Brief summary of what the changes actually do.
 ```markdown
 # abc1234
 
-**Branch:** `branch-name`
-**Commit:** `abc1234`
-**Reviewed:** YYYY-MM-DD
+**Branch:** `branch-name`  
+**Commit:** `abc1234`  
+**Reviewed:** YYYY-MM-DD  
 **Files changed:** N (X insertions, Y deletions)
 
 ---
