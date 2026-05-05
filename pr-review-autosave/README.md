@@ -26,12 +26,24 @@ Save to a custom filename:
 3. Saves output to `review_{PR_NUMBER}.md`
 4. Falls back to `review_{branch_name}.md` if no PR exists for the branch
 
+## Dependencies
+
+Requires the `pr-review-toolkit` plugin from the `claude-code-plugins` marketplace. Add both marketplaces to your Claude Code settings:
+
+```json
+"pluginMarketplaces": [
+  "https://github.com/catsby/claude-plugins",
+  "https://github.com/anthropics/claude-plugins-official"
+]
+```
+
 ## Installation
 
-Enable it in your `~/.claude/settings.json`:
+Enable both plugins in your `~/.claude/settings.json`:
 
 ```json
 "enabledPlugins": {
-  "pr-review-autosave@catsby-claude": true
+  "pr-review-autosave@catsby-claude": true,
+  "pr-review-toolkit@claude-code-plugins": true
 }
 ```

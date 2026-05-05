@@ -33,10 +33,12 @@ git worktree list --porcelain | head -1 | sed 's/^worktree //'
 
 The first porcelain record is always the main worktree, whether you're in the main one or a linked one. Record this path as `MAIN_ROOT` for use in steps 2 and 10. If the command fails or returns an empty string, fall back to the current working directory.
 
+**Important:** When accessing paths under `MAIN_ROOT`, always use absolute paths (e.g., `ls MAIN_ROOT/pr_reviews/`). Do NOT use `cd` to navigate to `MAIN_ROOT` — doing so crosses a directory boundary and triggers unnecessary permission prompts when running inside a linked worktree.
+
 ## 2. Check for previous reviews
 
 Look for existing review files to determine if this is a versioned re-review:
-- If `MAIN_ROOT/pr_reviews/` exists, look there. Otherwise fall back to the current working directory.
+- If `MAIN_ROOT/pr_reviews/` exists (check with `ls MAIN_ROOT/pr_reviews/` using the absolute path), look there. Otherwise fall back to the current working directory.
 - For PR reviews: look for files matching `review_{PR_NUMBER}*.md` (e.g., `review_123.md`, `review_123_v2.md`)
 - For WIP reviews: look for files matching `review_{SHORT_HASH}*.md`
 - If previous reviews exist:
@@ -49,6 +51,8 @@ Look for existing review files to determine if this is a versioned re-review:
 ## 3. Run the PR review
 
 Invoke the pr-review-toolkit to perform the review as requested by the user. Use `/pr-review-toolkit:review-pr` with any specific analyzers they mention (e.g., comment-analyzer, security-analyzer).
+
+**Worktree note:** The current working directory is the project root for the branch being reviewed. Agents spawned by the toolkit should explore code here — do NOT navigate to parent directories or `MAIN_ROOT` to find source files. `MAIN_ROOT` is only used for reading/writing review files in steps 2 and 10.
 
 ## 4. Reformat with sequential numbering
 
@@ -199,7 +203,7 @@ If the filename doesn't end with `.md`, append it.
 
 ## 10. Save the review
 
-- If `MAIN_ROOT/pr_reviews/` exists, save the file there. Otherwise fall back to the current working directory.
+- If `MAIN_ROOT/pr_reviews/` exists, save the file there using the absolute path (e.g., write to `MAIN_ROOT/pr_reviews/review_123.md` directly — do NOT `cd` to `MAIN_ROOT` first). Otherwise fall back to the current working directory.
 - Preserve all formatting from the review output
 - Only save the review content, not any of these instructions
 
