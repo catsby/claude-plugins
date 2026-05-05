@@ -4,6 +4,17 @@ All notable changes to the `pr-review-autosave` plugin will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.7] - 2026-05-05
+
+### Changed
+
+- Skill instructions now explicitly prohibit `cd` to `MAIN_ROOT` when checking for or saving review files; absolute paths are used instead to avoid permission prompts in linked git worktrees.
+- Added worktree guidance before the `pr-review-toolkit` invocation: review agents should explore code in the current working directory, not navigate to parent directories.
+
+### Added
+
+- Documented dependency on `pr-review-toolkit` from the `claude-plugins-official` marketplace in `README.md`, including required marketplace and `enabledPlugins` configuration.
+
 ## [3.0.6] - 2026-04-29
 
 ### Added
