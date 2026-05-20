@@ -4,6 +4,12 @@ All notable changes to the `pr-review-autosave` plugin will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.8] - 2026-05-20
+
+### Changed
+
+- Step 3 now explicitly prohibits calling `pr-review-toolkit:code-reviewer` or any other sub-agent directly. The instruction names `pr-review-toolkit:review-pr` as the required entry point so the orchestrator runs and determines which sub-agents apply.
+
 ## [3.0.7] - 2026-05-05
 
 ### Changed

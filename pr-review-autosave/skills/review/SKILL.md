@@ -50,7 +50,9 @@ Look for existing review files to determine if this is a versioned re-review:
 
 ## 3. Run the PR review
 
-Invoke the pr-review-toolkit to perform the review as requested by the user. Use `/pr-review-toolkit:review-pr` with any specific analyzers they mention (e.g., comment-analyzer, security-analyzer).
+**You MUST invoke the `pr-review-toolkit:review-pr` skill here — do NOT substitute any other agent or skill (e.g., do not call `pr-review-toolkit:code-reviewer` directly).** `review-pr` orchestrates multiple sub-agents including code-reviewer, type-design-analyzer, comment-analyzer, and others based on what changed; calling a sub-agent directly bypasses that orchestration and produces an incomplete review.
+
+Use the Skill tool: `Skill("pr-review-toolkit:review-pr")`. Pass any specific analyzers the user mentioned (e.g., comment-analyzer, security-analyzer) as arguments.
 
 **Worktree note:** The current working directory is the project root for the branch being reviewed. Agents spawned by the toolkit should explore code here — do NOT navigate to parent directories or `MAIN_ROOT` to find source files. `MAIN_ROOT` is only used for reading/writing review files in steps 2 and 10.
 
