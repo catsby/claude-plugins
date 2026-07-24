@@ -19,6 +19,30 @@ Save to a custom filename:
 /pr-review-autosave:review my_review.md
 ```
 
+## Reviewing a PR you are not checked out on
+
+The skill above assumes you are already in a checkout of the branch under review. To review an arbitrary PR from anywhere — including from `claude agents` — use the agent instead:
+
+From `claude agents` (agent view), mention it in the dispatch prompt:
+
+```
+@pr-review-worktree review PR 123
+```
+
+From inside a normal session, use the `@agent-` prefix with the plugin-scoped name:
+
+```
+@agent-pr-review-autosave:pr-review-worktree review PR 123
+```
+
+In both cases prefer the `@` typeahead over typing the name by hand — it inserts the form that context expects.
+
+It fetches the PR head, creates a worktree for it under `.claude/worktrees/pr-123`, runs the review there, and saves the result to the main checkout. Your current branch and working tree are left untouched.
+
+In agent view a mentioned agent runs as the session's main agent rather than as a subagent, so it retains the `Agent` tool and can spawn the `pr-review-toolkit` sub-agents that `review-pr` orchestrates. A subagent would have that tool stripped and could not fan out.
+
+The agent never commits, pushes, opens a pull request, or posts the review to GitHub — output is the local markdown file only.
+
 ## What it does
 
 1. Runs pr-review-toolkit to review the PR

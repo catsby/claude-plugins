@@ -4,6 +4,26 @@ All notable changes to the `pr-review-autosave` plugin will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2026-07-24
+
+### Added
+
+- `agents/pr-review-worktree.md` — an agent, so the plugin can be invoked from the `@`-mention typeahead and from `claude agents`. It resolves a PR number, fetches the PR head, creates a dedicated worktree, and then delegates to the `review` skill.
+- The agent fetches `refs/pull/<N>/head` rather than resolving `headRefName` and fetching a branch, so PRs opened from forks work.
+- Post-`EnterWorktree` assertion that the session actually landed in the PR worktree at the expected commit. Background sessions auto-relocate into a fresh worktree branched from the default branch before editing files; without this check that would silently review the wrong code.
+- Post-save assertion that the review file exists at the path the skill reported.
+- Explicit prohibitions in the agent against committing, pushing, and opening pull requests. Background sessions that isolate changes in a worktree otherwise do this without asking, which would push review files to the remote.
+
+### Changed
+
+- Skill step 1 now honors an explicitly-supplied PR number and skips branch-based detection when one is given. Branch-based detection fails in a worktree whose local branch has no upstream, which would silently downgrade a PR review to a WIP review and save to `review_<hash>.md`. Auto-detection is unchanged when no number is supplied.
+
+### Notes
+
+- The agent deliberately does NOT set `isolation: worktree` in its frontmatter. That option branches from the repository's default branch, not from the PR under review, which would produce a review of the wrong code.
+- The fetch deliberately uses no destination refspec. Fetching into a local branch fails on every re-review with `refusing to fetch into branch '...' checked out at ...` once the worktree is left in place, and `+` does not override it.
+- `/pr-review-autosave:review` continues to work as before for sessions already checked out on the branch under review.
+
 ## [3.0.8] - 2026-05-20
 
 ### Changed

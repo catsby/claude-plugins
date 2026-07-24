@@ -14,7 +14,8 @@ You will review a PR (or WIP changes) using the pr-review-toolkit and automatica
 ## 1. Detect context
 
 Determine whether this is a PR or WIP (work-in-progress) review:
-- Run `gh pr view --json number,title -q '"\(.number)\t\(.title)"'` for the current branch
+- **If the caller supplied a PR number explicitly** (in the user's request or in the invoking agent's prompt), use it directly: `gh pr view <N> --json number,title -q '"\(.number)\t\(.title)"'`. Skip the branch-based detection below. An explicit number always wins — branch-based detection fails in a detached or locally-created branch checkout and would silently downgrade a PR review to a WIP review.
+- Otherwise, run `gh pr view --json number,title -q '"\(.number)\t\(.title)"'` for the current branch
 - If that fails (no PR found for the local branch name), the local branch may differ from the remote branch (e.g. in worktrees). Try a fallback:
   - Get the upstream tracking branch: `git rev-parse --abbrev-ref @{upstream}` (e.g. `origin/user/feat-branch`)
   - Strip the remote prefix to get the remote branch name (e.g. `user/feat-branch`)
