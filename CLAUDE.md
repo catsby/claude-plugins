@@ -13,6 +13,7 @@ This is a **Claude Code plugin marketplace** repository. It contains Claude Code
   - `.claude-plugin/plugin.json` — Plugin metadata (name, version, author)
   - `skills/<skill-name>/SKILL.md` — Skill definitions (YAML frontmatter + Markdown instructions)
   - `agents/<agent-name>.md` — Optional agent definitions (invoked via `@`-mention or `claude agents`)
+  - `workflows/<name>.js` — Optional Workflow scripts, namespaced as `<plugin>:<meta.name>`
   - `CHANGELOG.md` — Keep a Changelog format, updated with every version bump
   - `README.md` — User-facing documentation
 
@@ -22,6 +23,7 @@ This is a **Claude Code plugin marketplace** repository. It contains Claude Code
 Wraps `pr-review-toolkit` (from the `claude-plugins-official` marketplace) and auto-saves review output.
 - Skill `review` — Reviews the current checkout. Uses an explicitly-supplied PR number if given, else detects one from the branch/upstream, else falls back to a WIP review keyed on the short commit hash.
 - Agent `pr-review-worktree` — Reviews an arbitrary PR from anywhere: fetches `refs/pull/<N>/head`, creates a worktree under `.claude/worktrees/pr-<N>`, then delegates to the `review` skill.
+- Workflow `review-analyzers` — Used only by the `review` skill with `--workflow`: runs the toolkit analyzers as a Workflow and refutation-checks each finding. Returns structured findings; the skill still does formatting, versioning, and saving.
 
 Output goes to `pr_reviews/` when that directory exists in the **main** worktree root (resolved via `git worktree list --porcelain | head -1`), otherwise the cwd.
 

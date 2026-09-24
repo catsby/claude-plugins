@@ -87,7 +87,7 @@ The toplevel must be the `pr-<N>` worktree path and `HEAD` must equal `PR_SHA`. 
 
 Invoke the skill: `Skill("pr-review-autosave:review")`.
 
-**State the PR number explicitly in the invocation** (e.g. "review PR 123"). The skill's own detection runs `gh pr view` against the current branch and falls back to the upstream tracking branch; the worktree's local branch has no upstream, so without an explicit number the skill would misclassify this as a WIP review and save to `review_<hash>.md` instead of `review_<N>.md`. Also pass along any specific analyzers the user named (e.g. comment-analyzer, security-analyzer).
+**State the PR number explicitly in the invocation** (e.g. "review PR 123"). The skill's own detection runs `gh pr view` against the current branch and falls back to the upstream tracking branch; the worktree's local branch has no upstream, so without an explicit number the skill would misclassify this as a WIP review and save to `review_<hash>.md` instead of `review_<N>.md`. Also pass along any specific analyzers the user named (e.g. comment-analyzer, security-analyzer), and `--workflow` if the user asked for workflow mode.
 
 That skill owns everything downstream — checking for previous review versions, orchestrating `pr-review-toolkit:review-pr`, formatting, and choosing the output path. Do not reimplement any of it here, and do not call `pr-review-toolkit` sub-agents directly.
 

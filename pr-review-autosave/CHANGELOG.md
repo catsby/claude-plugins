@@ -4,6 +4,27 @@ All notable changes to the `pr-review-autosave` plugin will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-09-23
+
+### Added
+
+- `workflows/review-analyzers.js` — a plugin workflow that runs the pr-review-toolkit analyzers as a Workflow, so each analyzer's progress is visible and inspectable in `/workflows` and a run can be resumed.
+- Opt-in `--workflow` flag for the `review` skill (new step 3W). Without the flag the skill behaves exactly as before and calls `pr-review-toolkit:review-pr`.
+- In workflow mode, every finding goes to a separate agent that tries to refute it against the code. Only confidently refuted findings are dropped, and they are listed unnumbered under "Refuted during verification" in the saved review so a wrong drop can be recovered.
+- The `pr-review-worktree` agent passes `--workflow` through to the skill when the user asks for it.
+
+### Changed
+
+- Step 4 now defines one body layout for both modes: `## Critical`, `## Important`, `## Suggestions` (always present, `None.` when empty), then `## Strengths`, `## Recommended Action`, `### Dismissed`, and `### Refuted during verification`. Findings that several analyzers report are merged into one issue.
+- Each issue has a new `Raised by:` metadata field naming the analyzers that reported it, and the header has a new `Analyzers:` field listing every analyzer that ran. Without this, the attribution and the merging of duplicates varied from run to run.
+
+### Notes
+
+- Workflow mode computes the diff range explicitly (merge base with the PR's base branch, or with the default branch for WIP reviews) and hands it to every analyzer. `review-pr` scopes with `git diff --name-only`, which is empty in a clean PR worktree.
+- Workflow mode selects analyzers inline with the same table `review-pr` uses, and never runs `code-simplifier`, because that agent edits files.
+- Workflow mode needs the Workflow tool in the session running the skill, just as the default mode needs the `Agent` tool.
+- Workflow mode pins every review and verification agent to `opus` (the alias, so it follows the latest Opus), whatever model the session runs.
+
 ## [3.1.0] - 2026-07-24
 
 ### Added

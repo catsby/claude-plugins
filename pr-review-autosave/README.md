@@ -19,6 +19,22 @@ Save to a custom filename:
 /pr-review-autosave:review my_review.md
 ```
 
+### Workflow mode (opt-in)
+
+```
+/pr-review-autosave:review --workflow
+```
+
+This mode runs the pr-review-toolkit analyzers as a Workflow (`workflows/review-analyzers.js`) instead of through `review-pr`. The saved file has the same format. The differences:
+
+- Each analyzer appears as its own agent in `/workflows`, where you can watch it run and inspect what it returned.
+- A second agent checks each finding against the code. Findings it shows to be wrong are moved to an unnumbered "Refuted during verification" section instead of being raised as issues.
+- Every analyzer is given the same explicit diff range: the merge base with the PR's base branch, or with the default branch for WIP reviews.
+- `code-simplifier` never runs, because it edits files.
+- Every review and verification agent runs on Opus, whatever model the session uses.
+
+This mode costs more tokens than the default, mostly because of the verification agents. Claude Code asks for permission before each run and offers "don't ask again" for this workflow. If the workflow can't be resolved by name, the skill falls back to the script's path in the plugin cache. That path may prompt for read access, and "don't ask again" isn't offered there.
+
 ## Reviewing a PR you are not checked out on
 
 The skill above assumes you are already in a checkout of the branch under review. To review an arbitrary PR from anywhere — including from `claude agents` — use the agent instead:
@@ -48,7 +64,7 @@ The agent never commits, pushes, opens a pull request, or posts the review to Gi
 1. Determines what is under review. An explicitly supplied PR number always wins. Otherwise it tries `gh pr view` for the current branch, then falls back to `gh pr list --head` against the upstream tracking branch — which is what makes detection work in a worktree whose local branch name differs from the remote one. If no PR is found, it runs a **WIP review** keyed on the short commit hash of `HEAD`.
 2. Looks for previous reviews of the same PR or commit and reads the most recent one, so this run can be versioned against it.
 3. Runs `pr-review-toolkit:review-pr`, which orchestrates its sub-agents based on what changed.
-4. Reformats the output: sequential `[#N]` numbering running continuously across all severity sections, and per-issue `Introduced` / `Status` / `Files` metadata.
+4. Reformats the output into a fixed layout: duplicate findings from different analyzers are merged, `[#N]` numbering runs continuously across all severity sections, and each issue has `Introduced` / `Status` / `Raised by` / `Files` metadata. The header lists the analyzers that ran. Both modes produce the same layout.
 5. On a re-review, diffs against the previous version — issues that are gone are listed under a "Fixed since vN" heading, and issues you dismissed are carried forward without being raised again.
 6. Saves the result and reports where it landed.
 
