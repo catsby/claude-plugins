@@ -1,7 +1,6 @@
 {
   "name": "catsby-claude",
   "description": "Claude Code plugins by Clint Shryock",
-  "url": "https://github.com/catsby/claude-plugins",
   "owner": {
     "name": "Clint Shryock",
     "email": "info@ctshryock.com"
@@ -11,6 +10,11 @@
       "name": "pr-review-autosave",
       "source": "./pr-review-autosave",
       "description": "PR review that automatically saves results to markdown files"
+    },
+    {
+      "name": "explain-code",
+      "source": "./explain-code",
+      "description": "Explains code with analogies, ASCII diagrams, and step-by-step walkthroughs"
     }
   ]
 }

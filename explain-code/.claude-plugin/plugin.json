@@ -1,0 +1,10 @@
+{
+  "name": "explain-code",
+  "description": "Explains code with analogies, ASCII diagrams, and step-by-step walkthroughs",
+  "version": "1.0.0",
+  "author": {
+    "name": "Clint Shryock"
+  },
+  "homepage": "https://github.com/catsby/claude-plugins/tree/main/explain-code",
+  "repository": "https://github.com/catsby/claude-plugins"
+}

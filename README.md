@@ -5,6 +5,7 @@ Claude Code plugins by Clint Shryock.
 ## Plugins
 
 - **pr-review-autosave** - PR review that automatically saves results to markdown files with a consistent, versioned format. Requires `pr-review-toolkit` from the [`claude-plugins-official`](https://github.com/anthropics/claude-plugins-official) marketplace.
+- **explain-code** - Explains code with analogies, ASCII diagrams, and step-by-step walkthroughs.
 
 ## Review Output Format
 
